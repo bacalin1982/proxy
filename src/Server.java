@@ -3,8 +3,10 @@ import java.io.*;
 
 public final class Server {
 
-    //Attributes
+    //Instance Singleton
     private static volatile Server instance = null;
+    
+    //Attributes
     private Integer port = null;
     private String address = null;
     private ServerSocket sServer = null;
