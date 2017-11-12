@@ -1,3 +1,9 @@
+/*
+* Authors:
+* Baptiste Calin
+* Jamar Frédéric
+* */
+
 import java.net.*;
 import java.io.*;
 
@@ -5,13 +11,17 @@ public class ConnectionHandler extends Thread{
     protected Socket socket;
 
     /*
-    * Constructor
+    * Constructor of a socket client
     * */
     public ConnectionHandler(Socket clientSocket) {
         System.out.println("Client connected   : "+clientSocket.toString());
         this.socket = clientSocket;
     }
 
+    /*
+    * Thread run method
+    * Here the decoding of each http request shall be done
+    * */
     public void run() {
         InputStream inp = null;
         BufferedReader brinp = null;

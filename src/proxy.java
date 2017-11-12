@@ -1,3 +1,9 @@
+/*
+* Authors:
+* Baptiste Calin
+* Jamar Frédéric
+* */
+
 public class proxy {
     public static void main(String[] arg){
         //Initializing proxy server instance

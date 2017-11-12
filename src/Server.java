@@ -1,3 +1,9 @@
+/*
+* Authors:
+* Baptiste Calin
+* Jamar Frédéric
+* */
+
 import java.net.*;
 import java.io.*;
 
