@@ -5,14 +5,23 @@ public final class Server {
 
     //Instance Singleton
     private static volatile Server instance = null;
-    
-    //Attributes
+
+    /*
+    * Attributes of Server:
+    * port = port of the server's socket
+    * address = address ip of the server
+    * sServer = socket object of the server (obj: ServerSocket)
+    * sClients = initiate a socket for a client, can we make an array of client socket ?
+    *            Should be a good idea for next time ;)
+    * */
     private Integer port = null;
     private String address = null;
     private ServerSocket sServer = null;
     private Socket sClients = null;
 
-    //Private Singleton Constructor
+    /*
+    * private Constructor for Singleton instance
+    * */
     private Server(Integer port, String address) {
         try {
             this.port = port;
@@ -24,6 +33,9 @@ public final class Server {
         }
     }
 
+    /*
+    * Singleton Server create with address loop and port 9090 by default
+    * */
     public final static Server getInstance(){
         if (Server.instance == null){
             synchronized (Server.class){
@@ -33,7 +45,12 @@ public final class Server {
         return Server.instance;
     }
 
-        public void openServer(){
+    /*
+    * Opening a new socket for a new client and handle it with a thread function for each.
+    * in connectionHandler, each client is managed separately
+    * This is in connectionHandler where decoding and coding shall be done
+    * */
+    public void openServer(){
         try {
             this.sClients = this.sServer.accept();
             Runnable connectionHandler = new ConnectionHandler(this.sClients);
@@ -45,6 +62,9 @@ public final class Server {
 
     }
 
+    /*
+    * This function close only the socket server not client ones.
+    * */
     public Boolean closeServer(){
         Boolean closed = false;
         if(this.sServer != null){
@@ -59,6 +79,9 @@ public final class Server {
         return closed;
     }
 
+    /*
+    * Some getters
+    * */
     public String getAddress(){
         return this.address;
     }

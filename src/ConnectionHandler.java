@@ -4,6 +4,9 @@ import java.io.*;
 public class ConnectionHandler extends Thread{
     protected Socket socket;
 
+    /*
+    * Constructor
+    * */
     public ConnectionHandler(Socket clientSocket) {
         System.out.println("Client connected   : "+clientSocket.toString());
         this.socket = clientSocket;
