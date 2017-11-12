@@ -1,13 +1,10 @@
-import com.sun.jndi.ldap.Connection;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.net.*;
 import java.io.*;
 
-public class Server {
+public final class Server {
 
     //Attributes
-    private static Server instance = new Server(9090, "127.0.0.1");
+    private static volatile Server instance = null;
     private Integer port = null;
     private String address = null;
     private ServerSocket sServer = null;
@@ -22,16 +19,19 @@ public class Server {
             this.sClients = null;
         } catch (Exception e) {
             System.out.println(e.toString());
-        } finally {
-            System.out.println("Server correctly initialized (@"+this.address+":"+this.port+")");
         }
     }
 
-    public Server getServerInstance(){
-        return this.instance;
+    public final static Server getInstance(){
+        if (Server.instance == null){
+            synchronized (Server.class){
+                Server.instance = new Server(9090, "127.0.0.1");
+            }
+        }
+        return Server.instance;
     }
 
-    public Boolean openServer(){
+        public void openServer(){
         try {
             this.sClients = this.sServer.accept();
             Runnable connectionHandler = new ConnectionHandler(this.sClients);
@@ -55,5 +55,13 @@ public class Server {
             }
         }
         return closed;
+    }
+
+    public String getAddress(){
+        return this.address;
+    }
+
+    public Integer getPort() {
+        return this.port;
     }
 }
