@@ -38,12 +38,14 @@ public class ConnectionHandler extends Thread{
             try {
                 line = brinp.readLine();
                 if ((line == null) || line.equalsIgnoreCase("QUIT")) {
+                    if (line != null) System.out.println(line.toString());
                     System.out.println("Client disconnected: "+this.socket.toString());
                     socket.close();
                     return;
                 } else {
-                    out.writeBytes(line + "\n\r");
-                    out.flush();
+                    //out.writeBytes(line + "\n\r");
+                    //out.flush();
+                    System.out.println(line.toString());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
