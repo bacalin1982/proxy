@@ -2,6 +2,8 @@
 [Tt]humbs.db
 *.DS_Store
 
+.idea/*
+
 #Java project
 *.xml
 *.class
