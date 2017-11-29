@@ -3,6 +3,9 @@ package baptiste;
 import baptiste.bean.HttpRequest;
 import baptiste.util.HttpRequestBuilder;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
 
@@ -36,6 +39,25 @@ public class Client extends Thread {
                     HttpRequest httpRequest = HttpRequestBuilder.makeHttpRequest(request);
                     System.out.println(httpRequest.toString());
 
+                    File file = new File(".\\file.xml");
+                    JAXBContext jaxbContext = JAXBContext.newInstance(HttpRequest.class);
+                    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                    jaxbMarshaller.marshal(httpRequest, file);
+                    //Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                    //Customer customer = (Customer) jaxbUnmarshaller.unmarshal(file);
+                    //System.out.println(customer);
+
+                    /*
+                    File file = new File("C:\\file.xml");
+		JAXBContext jaxbContext = JAXBContext.newInstance(Customer.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		// output pretty printed
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		jaxbMarshaller.marshal(customer, file);
+		jaxbMarshaller.marshal(customer, System.out);
+                     */
                     //todo Cache
 
                     //response
