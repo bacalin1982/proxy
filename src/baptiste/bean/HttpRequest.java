@@ -15,14 +15,14 @@ public class HttpRequest {
     private Map<String, String> params;
 
     public HttpRequest(){
+        this.params = new HashMap<>();
     }
 
     public HttpRequest(String method, String url, String httpVersion){
+        this();
         this.method         = method;
         this.url            = url;
         this.httpVersion    = httpVersion;
-
-        this.params = new HashMap<>();
     }
 
     public String getMethod() {
@@ -72,10 +72,10 @@ public class HttpRequest {
     @Override
     public String toString() {
         String request = "Request:\n"+
-                this.method + " " + this.url + " " + this.httpVersion + "\n" +
-                "Properties:";
+                "\t"+this.method + " " + this.url + " " + this.httpVersion + "\n" +
+                "\tProperties:";
         for(String key: this.params.keySet()){
-            request += "\n- "+key+":"+this.params.get(key);
+            request += "\n\t\t- "+key+":"+this.params.get(key);
         }
 
         return request;

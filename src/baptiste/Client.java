@@ -2,35 +2,15 @@ package baptiste;
 
 import baptiste.bean.HttpRequest;
 import baptiste.bean.HttpResponse;
-import baptiste.util.ClientFetcher;
 import baptiste.util.HttpRequestBuilder;
-import sun.net.www.http.HttpClient;
+import baptiste.util.HttpResponseBuilder;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.ServerSocket;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Client extends Thread {
-
-    private int port;
-    private Socket socket;
-    private OutputStream outStream;
-    private ArrayList<String> listObject;
-    private boolean isConnceted = false;
-    private String resourceName;
-    private InputStream inputStreamFromServer;
-    private OutputStream outputStreamFromServer;
-    private Timer timer;
-    private boolean isRunning;
-
 
     private Socket clientSocket;
     public Client(Socket clientSocket){
@@ -66,78 +46,48 @@ public class Client extends Thread {
                         HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
                         if(httpResponse == null){
                             //get response from server
-                            //ClientFetcher cf = new ClientFetcher(httpRequest.getHost(), 80, clientOutputStream);
-                            //cf.fetchObject(clientRequest);
+                            String host = httpRequest.getHost();
+                            Socket serverSocket = new Socket(host, 80);
+                            System.out.println("Connect to "+host+" on port 80");
 
-                            /*final URL url = new URL(httpRequest.getUrl());
-                            final HttpURLConnection connectionHttp = (HttpURLConnection) url.openConnection();
-                            connectionHttp.setRequestMethod(httpRequest.getMethod());
-                            for (final String key : requestHeader.getParameter().keySet()) {
-                                //if (isNotSecretToken(key)) {
-                                    String value = requestHeader.getParameter().get(key);
-                                    connectionHttp.addRequestProperty(key, value);
-                                //}
-                            }
+                            while(!serverSocket.isClosed()) {
+                                try {
+                                    DataInputStream serverRequestStream = new DataInputStream(serverSocket.getInputStream());
+                                    DataOutputStream serverResponseStream = new DataOutputStream(serverSocket.getOutputStream());
 
-                            // Send response back to client
-                            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            final DataInputStream dis = new DataInputStream(connectionHttp.getInputStream());
+                                    //send client request to server
+                                    serverResponseStream.writeBytes(clientRequest);
 
-                            // Add response header
-                            final StringBuilder sb = new StringBuilder();
-                            sb.append(requestHeader.getHttpVersion() + " "
-                                    + connectionHttp.getResponseCode() + " "
-                                    + connectionHttp.getResponseMessage() + "\r\n");
-                            final Map<String, List<String>> map = connectionHttp.getHeaderFields();
-                            for (final Map.Entry<String, List<String>> entry : map.entrySet()) {
-                                final String key = entry.getKey();
-                                sb.append(key + " : " + entry.getValue().toString().replace("[", "")
-                                        .replace("]", "").replace(",", " ")
-                                        + "\r\n");
-                            }
-                            sb.append("\r\n");
+                                    //tempo
+                                    while (serverRequestStream.available() == 0) {
+                                        sleep(1000);
+                                        System.out.println("waiting 1s");
+                                    }
 
-                            // Add response content
-                            baos.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
-                            final byte[] data = new byte[(int) Short.MAX_VALUE];
-                            int index = dis.read(data, 0, (int) Short.MAX_VALUE);
-                            while (index != -1) {
-                                baos.write(data, 0, index);
-                                index = dis.read(data, 0, (int) Short.MAX_VALUE);
-                            }
-                            final byte[] result = baos.toByteArray();
-                            */
-                            //while(true) {
-                                //try {
+                                    //read server response
+                                    String serverResponse = "";
+                                    byte[] serverLine = new byte[serverRequestStream.available()];
+                                    while (serverRequestStream.available() > 0) {
+                                        serverRequestStream.read(serverLine);
+                                        serverResponse += new String(serverLine);
+                                        //send to client
+                                        clientOutputStream.write(serverLine);
+                                        clientOutputStream.flush();
+                                    }
 
-                            HttpClient client = HttpClient.New(new URL(httpRequest.getUrl()));
+                                    //make response
+                                    if (!serverResponse.isEmpty()) {
+                                        httpResponse = HttpResponseBuilder.makeHttpResponse(serverResponse);
+                                        System.out.println(httpResponse.toString());
 
+                                        //close server socket
+                                        serverSocket.close();
+                                    }
 
-                            Socket serverSocket = new Socket(httpRequest.getHost(), 80);
-
-                                    //while (!connectionHttp.isClosed()) {
-                                        DataInputStream serverRequestStream = new DataInputStream(client.getInputStream());
-                                        DataOutputStream serverResponseStream = new DataOutputStream(client.getOutputStream());
-
-                                        //read server request
-                                        String serverRequest = "";
-                                        byte[] serverLine = new byte[serverRequestStream.available()];
-                                        while (clientRequestStream.available() > 0) {
-                                            serverRequestStream.read(serverLine);
-                                            serverRequest += new String(serverLine);
-                                            clientOutputStream.write(serverLine);
-                                            clientOutputStream.flush();
-                                        }
-
-                                        //make request
-                                        if (!serverRequest.isEmpty()) {
-
-                                        }
-                                    //}
-                                /*}catch(Exception e){
+                                } catch (Exception e) {
                                     continue;
-                                }*/
-                            //}
+                                }
+                            }
                         }else{
 
                         }
@@ -151,7 +101,7 @@ public class Client extends Thread {
                         //outputStreamFromClient = this.clientSocket.getOutputStream();
                     }
 
-                    //close
+                    //close client socket
                     if(clientSocket != null) {
                         clientSocket.close();
                     }
@@ -220,29 +170,5 @@ public class Client extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-    private void initTimer(Socket serverSocket, String host) {
-        if (this.timer == null) {
-            this.timer = new Timer("KAL Timer with : " + host);
-        }
-        if (isRunning) {
-            timer.cancel();
-            this.timer = new Timer("KAL Timer with : " + host);
-        }
-        TimerTask timerTask = new TimerTask() {
-
-            @Override
-            public void run() {
-                try {
-                    socket.close();
-                    isConnceted = false;
-                    outStream.close();
-                    timer.cancel();
-                } catch (IOException ex) {
-                   ex.printStackTrace();
-                }
-            }
-        };
-        timer.schedule(timerTask, 1000 * 60);
     }
 }

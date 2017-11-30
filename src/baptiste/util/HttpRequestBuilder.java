@@ -19,7 +19,7 @@ public class HttpRequestBuilder {
                 String httpVersion  = splitLine[2];
                 httpRequest = new HttpRequest(method, url, httpVersion);
             }else{
-                String[] splitLine  = scan.nextLine().split(":");
+                String[] splitLine  = scan.nextLine().split(": ");
                 httpRequest.addParam(splitLine[0], splitLine[1]);
             }
         }

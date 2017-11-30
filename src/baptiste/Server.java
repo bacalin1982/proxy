@@ -1,8 +1,5 @@
 package baptiste;
 
-
-import baptiste.Client;
-
 import java.net.ServerSocket;
 
 public class Server implements Runnable{
