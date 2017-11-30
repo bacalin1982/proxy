@@ -1,13 +1,14 @@
 package baptiste;
 
 import baptiste.bean.HttpRequest;
+import baptiste.bean.HttpResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cache {
 
-    private Map<HttpRequest, String> requestList = new HashMap<>();
+    private Map<HttpRequest, HttpResponse> responseList = new HashMap<>();
 
     private static Cache instance = null;
     private Cache(){}
@@ -18,13 +19,14 @@ public class Cache {
         return instance;
     }
 
-    public Map<HttpRequest, String> getRequestList() {
-        return requestList;
+    public Map<HttpRequest, HttpResponse> getResponseList() {
+        return responseList;
     }
 
-    public String getRequest(HttpRequest request){
-        if(requestList.containsKey(request)){
-
+    public HttpResponse getResponseFromRequest(HttpRequest request){
+        if(responseList.containsKey(request)){
+            return responseList.get(request);
         }
+        return null;
     }
 }

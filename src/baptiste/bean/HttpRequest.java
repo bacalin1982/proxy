@@ -80,4 +80,31 @@ public class HttpRequest {
 
         return request;
     }
+
+    public String getHost(){
+        return params.get("Host");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HttpRequest)) return false;
+
+        HttpRequest that = (HttpRequest) o;
+
+        if (getMethod() != null ? !getMethod().equals(that.getMethod()) : that.getMethod() != null) return false;
+        if (getUrl() != null ? !getUrl().equals(that.getUrl()) : that.getUrl() != null) return false;
+        if (getHttpVersion() != null ? !getHttpVersion().equals(that.getHttpVersion()) : that.getHttpVersion() != null)
+            return false;
+        return getParams() != null ? getParams().equals(that.getParams()) : that.getParams() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getMethod() != null ? getMethod().hashCode() : 0;
+        result = 31 * result + (getUrl() != null ? getUrl().hashCode() : 0);
+        result = 31 * result + (getHttpVersion() != null ? getHttpVersion().hashCode() : 0);
+        result = 31 * result + (getParams() != null ? getParams().hashCode() : 0);
+        return result;
+    }
 }
