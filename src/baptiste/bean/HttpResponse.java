@@ -11,6 +11,8 @@ public class HttpResponse {
 
     private Map<String, String> params;
 
+    private String response;
+
     public HttpResponse(){
         this.params = new HashMap<>();
     }
@@ -43,6 +45,14 @@ public class HttpResponse {
 
     public Map<String, String> getParams() {
         return params;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     @Override

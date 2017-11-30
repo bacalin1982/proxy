@@ -29,4 +29,8 @@ public class Cache {
         }
         return null;
     }
+
+    public void putResponse(HttpRequest httpRequest, HttpResponse httpResponse){
+        responseList.put(httpRequest, httpResponse);
+    }
 }

@@ -80,6 +80,9 @@ public class Client extends Thread {
                                         httpResponse = HttpResponseBuilder.makeHttpResponse(serverResponse);
                                         System.out.println(httpResponse.toString());
 
+                                        //Put in cache
+                                        Cache.getInstance().putResponse(httpRequest, httpResponse);
+
                                         //close server socket
                                         serverSocket.close();
                                     }
@@ -89,6 +92,11 @@ public class Client extends Thread {
                                 }
                             }
                         }else{
+                            //response exist in cache
+                            System.out.println("Response for "+httpRequest.getHost()+" exist in cache");
+
+                            clientOutputStream.write(httpResponse.getResponse().getBytes());
+                            clientOutputStream.flush();
 
                         }
 

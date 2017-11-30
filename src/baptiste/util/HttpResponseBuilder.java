@@ -32,6 +32,25 @@ public class HttpResponseBuilder {
             }
         }
         httpResponse.addParam("Response", r.toString());
+        httpResponse.setResponse(response);
         return httpResponse;
+    }
+
+    public static byte[] reponseToByte(HttpResponse httpResponse){
+
+        StringBuilder r = new StringBuilder();
+        r.append(httpResponse.getHttpVersion()).append(" ");
+        r.append(httpResponse.getStatusCode()).append(" ");
+        r.append(httpResponse.getStatusValue()).append(" ").append("\r\n");
+        for(String key: httpResponse.getParams().keySet()){
+            if(key.equals("response")){
+                continue;
+            }
+            r.append(key).append(": ").append(httpResponse.getParam(key)).append("\r\n");
+        }
+        r.append("\r\n");
+        r.append(httpResponse.getParams().get("response"));
+        return r.toString().getBytes();
+
     }
 }
