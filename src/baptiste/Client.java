@@ -9,6 +9,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends Thread {
 
@@ -40,7 +42,7 @@ public class Client extends Thread {
                 //make request
                 if(!clientRequest.isEmpty()){
                     HttpRequest httpRequest = HttpRequestBuilder.makeHttpRequest(clientRequest);
-                    if(!httpRequest.getMethod().equals("CONNECT")) {
+                    if(httpRequest.getMethod().equals("GET")) {
                         System.out.println(httpRequest.toString());
 
                         HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
@@ -50,7 +52,8 @@ public class Client extends Thread {
                             Socket serverSocket = new Socket(host, 80);
                             System.out.println("Connect to "+host+" on port 80");
 
-                            while(!serverSocket.isClosed()) {
+                            int nbrWaiting = 10;
+                            S:while(!serverSocket.isClosed()) {
                                 try {
                                     DataInputStream serverRequestStream = new DataInputStream(serverSocket.getInputStream());
                                     DataOutputStream serverResponseStream = new DataOutputStream(serverSocket.getOutputStream());
@@ -61,11 +64,17 @@ public class Client extends Thread {
                                     //tempo
                                     while (serverRequestStream.available() == 0) {
                                         sleep(1000);
-                                        System.out.println("waiting 1s");
+                                        System.out.println("waiting for server 1s");
+                                        if(nbrWaiting == 0){
+                                            serverSocket.close();
+                                            continue S;
+                                        }
+                                        nbrWaiting--;
                                     }
 
                                     //read server response
-                                    String serverResponse = "";
+                                    String serverResponse = ""; //for debug
+                                    List<byte[]> serverResponseList = new ArrayList<>();
                                     byte[] serverLine = new byte[serverRequestStream.available()];
                                     while (serverRequestStream.available() > 0) {
                                         serverRequestStream.read(serverLine);
@@ -73,29 +82,38 @@ public class Client extends Thread {
                                         //send to client
                                         clientOutputStream.write(serverLine);
                                         clientOutputStream.flush();
+                                        //add
+                                        serverResponseList.add(serverLine);
                                     }
 
                                     //make response
                                     if (!serverResponse.isEmpty()) {
-                                        httpResponse = HttpResponseBuilder.makeHttpResponse(serverResponse);
+
+                                        httpResponse = HttpResponseBuilder.makeHttpResponse(serverResponse, serverResponseList);
                                         System.out.println(httpResponse.toString());
 
                                         //Put in cache
                                         Cache.getInstance().putResponse(httpRequest, httpResponse);
+                                        //save data
+                                        Cache.getInstance().saveToFile(httpRequest, httpResponse);
 
                                         //close server socket
                                         serverSocket.close();
                                     }
 
                                 } catch (Exception e) {
-                                    continue;
+                                    continue S;
                                 }
                             }
                         }else{
                             //response exist in cache
                             System.out.println("Response for "+httpRequest.getHost()+" exist in cache");
+                            System.out.println(httpResponse.toString());
 
-                            clientOutputStream.write(httpResponse.getResponse().getBytes());
+                            List<byte[]> serverResponseList = httpResponse.getServerResponseList();
+                            for(int i=0;i<=serverResponseList.size();i++) {
+                                clientOutputStream.write(serverResponseList.get(0));
+                            }
                             clientOutputStream.flush();
 
                         }
