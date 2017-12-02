@@ -1,5 +1,8 @@
 package baptiste;
 
+import baptiste.tools.Constants;
+import com.sun.tools.classfile.ConstantPool;
+
 public class Proxy {
 
     public static void main(String[] arg){
@@ -18,18 +21,18 @@ public class Proxy {
             try{
                 port = Integer.parseInt(arg[0]);
             }catch (NumberFormatException ex){
-                System.out.println("Wrong argument format. Default port 8081 will be used");
+                System.out.println(Constants.WRONG_ARG_FMT);
             }
             // Initialize cache instance
             Cache.getInstance().initialize();
 
             // Launching proxy cache server
             System.out.println("\n");
-            System.out.println("Proxy cache server on port["+port+"]");
+            System.out.println(Constants.SERVER_START_PORT.replace("%", Integer.toString(port)));
             new Thread(new Server(port)).start();
         }
         else{
-            System.out.println("Proxy takes exactly 1 argument ("+arg.length+" given). Use: Proxy <server_port>");
+            System.out.println(Constants.WRONG_ARG_NMB.replace("%", Integer.toString(arg.length)));
         }
     }
 }
