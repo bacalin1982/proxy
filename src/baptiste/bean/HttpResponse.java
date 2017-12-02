@@ -1,8 +1,12 @@
 package baptiste.bean;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@XmlRootElement
 public class HttpResponse {
 
     private String httpVersion;
@@ -11,7 +15,7 @@ public class HttpResponse {
 
     private Map<String, String> params;
 
-    private String response;
+    private List<byte[]> serverResponseList;
 
     public HttpResponse(){
         this.params = new HashMap<>();
@@ -27,12 +31,27 @@ public class HttpResponse {
         return httpVersion;
     }
 
+    @XmlElement
+    public void setHttpVersion(String httpVersion) {
+        this.httpVersion = httpVersion;
+    }
+
     public String getStatusCode() {
         return statusCode;
     }
 
+    @XmlElement
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
     public String getStatusValue() {
         return statusValue;
+    }
+
+    @XmlElement
+    public void setStatusValue(String statusValue) {
+        this.statusValue = statusValue;
     }
 
     public void addParam(String key, String value){
@@ -43,26 +62,35 @@ public class HttpResponse {
         return this.params.get(key);
     }
 
+    @XmlElement
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
+
     public Map<String, String> getParams() {
         return params;
     }
 
-    public String getResponse() {
-        return response;
+    public List<byte[]> getServerResponseList() {
+        return serverResponseList;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
+    @XmlElement
+    public void setServerResponseList(List<byte[]> serverResponseList) {
+        this.serverResponseList = serverResponseList;
     }
 
     @Override
     public String toString() {
-        String request = "Response:\n"+
+        String response = "Response:\n"+
                 "\tProperties:";
         for(String key: this.params.keySet()){
-            request += "\n\t\t- "+key+":"+this.params.get(key);
+            response += "\n\t\t- "+key+":"+this.params.get(key);
         }
-
-        return request;
+        response += "\n\tResponse:";
+        for(byte[] serverResponse: this.serverResponseList){
+            response += "\n\t\t"+serverResponse;
+        }
+        return response;
     }
 }

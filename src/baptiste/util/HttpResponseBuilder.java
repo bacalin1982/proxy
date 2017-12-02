@@ -3,16 +3,17 @@ package baptiste.util;
 import baptiste.bean.HttpRequest;
 import baptiste.bean.HttpResponse;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class HttpResponseBuilder {
-    public static HttpResponse makeHttpResponse(String response){
-        if(response == null || response.isEmpty()){
+    public static HttpResponse makeHttpResponse(String serverResponse, List<byte[]> serverResponseList){
+        if(serverResponse == null || serverResponse.isEmpty()){
             return null;
         }
         StringBuilder r = new StringBuilder();
         HttpResponse httpResponse = null;
-        Scanner scan = new Scanner(response);
+        Scanner scan = new Scanner(serverResponse);
         while(scan.hasNext()){
             if(httpResponse == null){//first line
                 String[] splitLine  = scan.nextLine().split(" ");
@@ -31,26 +32,7 @@ public class HttpResponseBuilder {
                 httpResponse.addParam(splitLine[0], splitLine[1]);
             }
         }
-        httpResponse.addParam("Response", r.toString());
-        httpResponse.setResponse(response);
+        httpResponse.setServerResponseList(serverResponseList);
         return httpResponse;
-    }
-
-    public static byte[] reponseToByte(HttpResponse httpResponse){
-
-        StringBuilder r = new StringBuilder();
-        r.append(httpResponse.getHttpVersion()).append(" ");
-        r.append(httpResponse.getStatusCode()).append(" ");
-        r.append(httpResponse.getStatusValue()).append(" ").append("\r\n");
-        for(String key: httpResponse.getParams().keySet()){
-            if(key.equals("response")){
-                continue;
-            }
-            r.append(key).append(": ").append(httpResponse.getParam(key)).append("\r\n");
-        }
-        r.append("\r\n");
-        r.append(httpResponse.getParams().get("response"));
-        return r.toString().getBytes();
-
     }
 }

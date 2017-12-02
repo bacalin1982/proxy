@@ -16,12 +16,14 @@ public class Proxy {
             }catch (NumberFormatException ex){
                 System.out.println("Wrong argument format. Default port 8081 will be used");
             }
-            //Launching proxy cache server
-            System.out.println("Proxy cache server on port["+port+"]");
-            new Thread(new Server(port)).start();
         }
-        else{
-            System.out.println("Arg error. Use: Proxy <server_port>");
-        }
+
+        //Initialize cache
+        Cache.getInstance().initialize();
+
+        //Launching proxy cache server
+        System.out.println("\n");
+        System.out.println("Proxy cache server on port["+port+"]");
+        new Thread(new Server(port)).start();
     }
 }
