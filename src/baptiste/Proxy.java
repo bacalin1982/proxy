@@ -1,7 +1,6 @@
 package baptiste;
 
 import baptiste.tools.Constants;
-import com.sun.tools.classfile.ConstantPool;
 
 public class Proxy {
 
