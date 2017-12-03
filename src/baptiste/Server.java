@@ -1,6 +1,7 @@
 package baptiste;
 
 import java.net.ServerSocket;
+import baptiste.tools.Constants;
 
 public class Server implements Runnable{
 
@@ -14,7 +15,7 @@ public class Server implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("Server start...");
+            System.out.println(Constants.SERVER_START);
             this.serverSocket = new ServerSocket(this.port);
             while(true){
                 new Client(this.serverSocket.accept()).start();
