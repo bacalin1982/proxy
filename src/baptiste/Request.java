@@ -2,8 +2,10 @@ package baptiste;
 
 import baptiste.bean.HttpRequest;
 import baptiste.bean.HttpResponse;
+import baptiste.tools.Constants;
 import baptiste.util.HttpRequestBuilder;
 import baptiste.util.HttpResponseBuilder;
+import sun.util.resources.cldr.saq.CurrencyNames_saq;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,7 +34,7 @@ public class Request extends Thread  {
                     //get response from server
                     String host = httpRequest.getHost();
                     Socket serverSocket = new Socket(host, 80);
-                    System.out.println("Connect to " + host + " on port 80");
+                    System.out.println(Constants.I_WEB_SERVER_CON.replace("%", host));
 
                     int nbrWaiting = 10;
                     S:
@@ -47,7 +49,7 @@ public class Request extends Thread  {
                             //tempo
                             while (serverRequestStream.available() == 0) {
                                 sleep(1000);
-                                System.out.println("waiting for server 1s");
+                                System.out.println(Constants.I_WEB_SERVER_WAIT);
                                 if (nbrWaiting == 0) {
                                     serverSocket.close();
                                     continue S;

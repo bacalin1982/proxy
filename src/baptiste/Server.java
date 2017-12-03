@@ -15,8 +15,9 @@ public class Server implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println(Constants.SERVER_START);
+            System.out.println(Constants._I+Constants.I_SERVER_START);
             this.serverSocket = new ServerSocket(this.port);
+            System.out.println(Constants._I+Constants.I_SERVER_READY);
             while(true){
                 new Client(this.serverSocket.accept()).start();
             }

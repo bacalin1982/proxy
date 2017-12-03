@@ -5,6 +5,7 @@ import baptiste.tools.Constants;
 public class Proxy {
 
     public static void main(String[] arg){
+        System.out.println(Constants.I_TITLE);
         int port = 8081;
         /*
         [REQ_002]
@@ -20,18 +21,18 @@ public class Proxy {
             try{
                 port = Integer.parseInt(arg[0]);
             }catch (NumberFormatException ex){
-                System.out.println(Constants.WRONG_ARG_FMT);
+                System.out.println(Constants._E+Constants.E_WRONG_ARG_FMT);
             }
             // Initialize cache instance
             Cache.getInstance().initialize();
 
             // Launching proxy cache server
             System.out.println("\n");
-            System.out.println(Constants.SERVER_START_PORT.replace("%", Integer.toString(port)));
+            System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%", Integer.toString(port)));
             new Thread(new Server(port)).start();
         }
         else{
-            System.out.println(Constants.WRONG_ARG_NMB.replace("%", Integer.toString(arg.length)));
+            System.out.println(Constants._E+Constants.E_WRONG_ARG_NMB.replace("%", Integer.toString(arg.length)));
         }
     }
 }
