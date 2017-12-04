@@ -1,12 +1,18 @@
 package baptiste;
 
+import baptiste.bean.HttpRequest;
+import baptiste.bean.HttpResponse;
+import baptiste.util.HttpRequestBuilder;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 public class Client extends Thread {
 
+    private Thread serverThread;
     private Socket clientSocket;
     private String clientRequest;
     private DataInputStream clientRequestStream;
@@ -38,18 +44,42 @@ public class Client extends Thread {
 
                 //make request
                 if (!this.clientRequest.isEmpty()) {
-                    new Request(this.clientRequest, this.clientOutputStream).start();
+                    HttpRequest httpRequest = HttpRequestBuilder.makeHttpRequest(this.clientRequest);
+                    if (httpRequest.getMethod().equals("GET")) {
+                        System.out.println(httpRequest.toString());
+                        HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
+                        if (httpResponse == null) {
+                            //response does not exist in cache
+                            System.out.println("Response for " + httpRequest.getHost() + " does not exist in cache");
+                            serverThread = new Request(this.clientSocket, this.clientRequest, this.clientOutputStream);
+                            serverThread.start();
+
+                            while(!serverThread.isInterrupted()){
+                                continue;
+                            }
+
+                        } else {
+                            //response exist in cache
+                            System.out.println("Response for " + httpRequest.getHost() + " exist in cache");
+                            System.out.println(httpResponse.toString());
+
+                            List<byte[]> serverResponseList = httpResponse.getServerResponseList();
+                            for (int i = 0; i <= serverResponseList.size(); i++) {
+                                clientOutputStream.write(serverResponseList.get(0));
+                            }
+                            clientOutputStream.flush();
+
+                            //close client socket
+                            clientSocket.close();
+                            System.out.println("Client " + this.clientSocket.getRemoteSocketAddress().toString() + " close...");
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                System.out.println("Client " + this.clientSocket.getRemoteSocketAddress().toString() + " close...");
-                this.clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Thread.currentThread().interrupt();
         }
     }
 }

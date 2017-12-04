@@ -23,16 +23,17 @@ public class Proxy {
             }catch (NumberFormatException ex){
                 System.out.println(Constants._E+Constants.E_WRONG_ARG_FMT);
             }
-            // Initialize cache instance
-            Cache.getInstance().initialize();
-
-            // Launching proxy cache server
-            System.out.println("\n");
-            System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%", Integer.toString(port)));
-            new Thread(new Server(port)).start();
         }
         else{
             System.out.println(Constants._E+Constants.E_WRONG_ARG_NMB.replace("%", Integer.toString(arg.length)));
         }
+
+        // Initialize cache instance
+        Cache.getInstance().initialize();
+
+        // Launching proxy cache server
+        System.out.println("\n");
+        System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%", Integer.toString(port)));
+        new Thread(new Server(port)).start();
     }
 }

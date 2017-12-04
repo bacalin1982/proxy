@@ -9,6 +9,8 @@ import java.util.Map;
 @XmlRootElement
 public class HttpResponse {
 
+    private static final String CACHE_CONTROL = "Cache-Control";
+
     private String httpVersion;
     private String statusCode;
     private String statusValue;
@@ -92,5 +94,20 @@ public class HttpResponse {
             response += "\n\t\t"+serverResponse;
         }
         return response;
+    }
+
+    public boolean isPutInCache(){
+
+        //Check property Cache-Control
+        String cacheControl = getParam(CACHE_CONTROL);
+        if(cacheControl != null && cacheControl.indexOf("no-cache") != -1){
+            return true;
+        }else{
+            System.out.println(CACHE_CONTROL+"="+"no-cache");
+        }
+
+        //Check property Date with property Expire
+
+        return false;
     }
 }
