@@ -1,7 +1,7 @@
-package baptiste;
+package proxy;
 
-import baptiste.bean.HttpRequest;
-import baptiste.bean.HttpResponse;
+import proxy.bean.HttpRequest;
+import proxy.bean.HttpResponse;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;

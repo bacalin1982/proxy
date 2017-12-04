@@ -1,4 +1,4 @@
-package baptiste.tools;
+package proxy.tools;
 
 public final class Constants {
     /*

@@ -1,16 +1,13 @@
-package baptiste;
+package proxy;
 
-import baptiste.bean.HttpRequest;
-import baptiste.bean.HttpResponse;
-import baptiste.util.HttpRequestBuilder;
-import baptiste.util.HttpResponseBuilder;
+import proxy.bean.HttpRequest;
+import proxy.bean.HttpResponse;
+import proxy.util.HttpRequestBuilder;
+import proxy.util.HttpResponseBuilder;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
 import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,14 +73,14 @@ public class Request extends Thread  {
                         System.out.println(httpResponse.toString());
 
                         //Check if response may be put in cache
-                        //if(httpResponse.isPutInCache()) {
+                        if(httpResponse.isPutInCache()) {
                             //Put in cache
                             Cache.getInstance().putResponse(httpRequest, httpResponse);
                             //save data
                             Cache.getInstance().saveToFile(httpRequest, httpResponse);
-                        /*}else{
+                        }else{
                             System.out.println("Response for "+httpRequest.getHost()+" not put in cache");
-                        }*/
+                        }
 
                         //close server socket
                         serverSocket.close();

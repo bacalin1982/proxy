@@ -1,7 +1,6 @@
-package baptiste.util;
+package proxy.util;
 
-import baptiste.bean.HttpRequest;
-import baptiste.bean.HttpResponse;
+import proxy.bean.HttpResponse;
 
 import java.util.List;
 import java.util.Scanner;

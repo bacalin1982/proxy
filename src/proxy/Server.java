@@ -1,7 +1,7 @@
-package baptiste;
+package proxy;
 
 import java.net.ServerSocket;
-import baptiste.tools.Constants;
+import proxy.tools.Constants;
 
 public class Server implements Runnable{
 

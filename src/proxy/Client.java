@@ -1,12 +1,11 @@
-package baptiste;
+package proxy;
 
-import baptiste.bean.HttpRequest;
-import baptiste.bean.HttpResponse;
-import baptiste.util.HttpRequestBuilder;
+import proxy.bean.HttpRequest;
+import proxy.bean.HttpResponse;
+import proxy.util.HttpRequestBuilder;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class Client extends Thread {
                     if (httpRequest.getMethod().equals("GET")) {
                         System.out.println(httpRequest.toString());
                         HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
-                        if (httpResponse == null) {
+                        if (httpResponse == null || !httpResponse.isValid(httpRequest)) {
                             //response does not exist in cache
                             System.out.println("Response for " + httpRequest.getHost() + " does not exist in cache");
                             serverThread = new Request(this.clientSocket, this.clientRequest, this.clientOutputStream);
