@@ -103,18 +103,18 @@ public class Cache {
             File dir = new File(DIRECTORY_DATA+"\\"+httpRequest.getHost()+"\\");
             if (dir.exists()) {
                 System.out.println("Directory "+dir.getAbsolutePath()+" already exist");
-                System.out.print("Delete "+dir.getAbsolutePath());
+                System.out.print(Constants._I+Constants.I_CACHE_DEL_DIR.replace("%1", dir.getAbsolutePath()));
                 if(dir.delete()){
-                    System.out.println(" OK");
+                    System.out.println(Constants.OK);
                 }else {
-                    System.out.println(" ERROR");
+                    System.out.println(Constants.NOK);
                 }
             }
             System.out.print("Create directory " + dir.getAbsolutePath());
             if (dir.mkdir()) {
-                System.out.println(" OK");
+                System.out.println(Constants.OK);
             } else {
-                System.out.println(" ERROR");
+                System.out.println(Constants.NOK);
                 System.exit(0);
             }
 
@@ -125,13 +125,13 @@ public class Cache {
             jaxbContext = JAXBContext.newInstance(HttpRequest.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.marshal(httpRequest, requestFile);
-            System.out.println("Save request to directory " + dir.getAbsolutePath());
+            System.out.println(Constants._I+Constants.I_CACHE_SAVE_REQ.replace("%1", dir.getAbsolutePath()));
 
             File responseFile = new File(dir.getAbsolutePath()+"\\"+FILE_RESPONSE);
             jaxbContext = JAXBContext.newInstance(HttpResponse.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.marshal(httpResponse, responseFile);
-            System.out.println("Save response to directory " + dir.getAbsolutePath());
+            System.out.println(Constants._I+Constants.I_CACHE_SAVE_RES.replace("%1", dir.getAbsolutePath()));
 
         }catch(Exception e){
             e.printStackTrace();

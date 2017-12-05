@@ -34,6 +34,7 @@ public final class Constants {
     public static final String I_CACHE_DATA_NFOUND = "No data found in cache.";
     public static final String I_CACHE_SAVE_REQ = "Save request to directory %1";
     public static final String I_CACHE_SAVE_RES = "Save response to directory %1";
+    public static final String I_CACHE_DEL_DIR = "Deleting %1 ... ";
 
     // Messages for errors (E_)
     // Proxy server messages
