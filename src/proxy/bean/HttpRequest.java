@@ -1,5 +1,7 @@
 package proxy.bean;
 
+import proxy.tools.Constants;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
@@ -71,11 +73,11 @@ public class HttpRequest {
 
     @Override
     public String toString() {
-        String request = "Request:\n"+
-                "\t"+this.method + " " + this.url + " " + this.httpVersion + "\n" +
-                "\tProperties:";
+        String request = Constants._S+"Request:\n"+
+                "\t\t\t"+this.method + " " + this.url + " " + this.httpVersion + "\n" +
+                "\t\t\tProperties:";
         for(String key: this.params.keySet()){
-            request += "\n\t\t- "+key+":"+this.params.get(key);
+            request += "\n\t\t\t\t- "+key+":"+this.params.get(key);
         }
 
         return request;

@@ -3,6 +3,7 @@ package proxy;
 import proxy.bean.HttpRequest;
 import proxy.bean.HttpResponse;
 import proxy.util.HttpRequestBuilder;
+import proxy.tools.Constants;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,8 +25,7 @@ public class Client extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println("--");
-            System.out.println("Client " + this.clientSocket.getRemoteSocketAddress().toString() + " start...");
+            System.out.println(Constants._I+Constants.CLIENT_NEW.replace("%1", this.clientSocket.getRemoteSocketAddress().toString()));
 
             while (!this.clientSocket.isClosed()) {
 
@@ -49,7 +49,7 @@ public class Client extends Thread {
                         HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
                         if (httpResponse == null || !httpResponse.isValid(httpRequest)) {
                             //response does not exist in cache
-                            System.out.println("Response for " + httpRequest.getHost() + " does not exist in cache");
+                            System.out.println(Constants._I+Constants.CLIENT_RES_NO_CACHE.replace("%1", httpRequest.getHost()));
                             serverThread = new Request(this.clientSocket, this.clientRequest, this.clientOutputStream);
                             serverThread.start();
 
@@ -59,7 +59,7 @@ public class Client extends Thread {
 
                         } else {
                             //response exist in cache
-                            System.out.println("Response for " + httpRequest.getHost() + " exist in cache");
+                            System.out.println(Constants._I+Constants.RESPONSE_IS_ALR_CACHED.replace("%1", httpRequest.getHost()));
                             System.out.println(httpResponse.toString());
 
                             List<byte[]> serverResponseList = httpResponse.getServerResponseList();
@@ -70,7 +70,7 @@ public class Client extends Thread {
 
                             //close client socket
                             clientSocket.close();
-                            System.out.println("Client " + this.clientSocket.getRemoteSocketAddress().toString() + " close...");
+                            System.out.println(Constants._I+Constants.CLIENT_CLOSE.replace("%1", this.clientSocket.getRemoteSocketAddress().toString()));
                         }
                     }
                 }

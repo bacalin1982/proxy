@@ -21,19 +21,19 @@ public class Proxy {
             try{
                 port = Integer.parseInt(arg[0]);
             }catch (NumberFormatException ex){
-                System.out.println(Constants._E+Constants.E_WRONG_ARG_FMT);
+                System.out.println(Constants._E+Constants.WRONG_ARG_FMT);
             }
 
             // Initialize cache instance
             Cache.getInstance().initialize();
+            System.out.println(Constants._I+Constants.CACHE_START+Constants.OK);
 
             // Launching proxy cache server
-            System.out.println("\n");
-            System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%1", Integer.toString(port)));
+            System.out.println(Constants._I+Constants.SERVER_START_PORT.replace("%1", Integer.toString(port)));
             new Thread(new Server(port)).start();
         }
         else{
-            System.out.println(Constants._E+Constants.E_WRONG_ARG_NMB.replace("%1", Integer.toString(arg.length)));
+            System.out.println(Constants._E+Constants.WRONG_ARG_NMB.replace("%1", Integer.toString(arg.length)));
         }
 
 

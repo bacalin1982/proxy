@@ -1,6 +1,5 @@
 package proxy;
 
-import com.sun.tools.internal.jxc.ap.Const;
 import proxy.bean.HttpRequest;
 import proxy.bean.HttpResponse;
 import proxy.tools.Constants;
@@ -46,11 +45,11 @@ public class Cache {
 
     public void initialize(){
         try {
-            System.out.println(Constants._I+Constants.I_CACHE_START);
+            System.out.println(Constants._I+Constants.CACHE_START);
             //create directory
-            File dir = new File(this.DIRECTORY_DATA+"\\");
+            File dir = new File(this.DIRECTORY_DATA+"/");
             if (!dir.exists()) {
-                System.out.print(Constants._S+Constants.I_CACHE_CREATE_DIR.replace("%1", dir.getAbsolutePath()));
+                System.out.print(Constants._S+Constants.CACHE_CREATE_DIR.replace("%1", dir.getAbsolutePath()));
                 if (dir.mkdir()) {
                     System.out.println(Constants.OK);
                 } else {
@@ -58,18 +57,18 @@ public class Cache {
                     System.exit(0);
                 }
             }else{
-                System.out.println(Constants._S+Constants.I_CACHE_DIR_EXISTS.replace("%1", dir.getAbsolutePath()));
+                System.out.println(Constants._I+Constants.CACHE_ALR_EXISTS);
             }
 
             //Loading cache
             JAXBContext jaxbContext;
             Unmarshaller jaxbUnmarshaller;
-            System.out.println(Constants._S+Constants.I_CACHE_LOAD_DATA);
+            System.out.println(Constants._S+Constants.CACHE_LOAD_DATA);
             if(dir.listFiles().length == 0){
-                System.out.println(Constants._S+Constants.I_CACHE_DATA_NFOUND);
+                System.out.println(Constants._S+Constants.CACHE_DATA_NFOUND);
             }else {
                 for (File dirData : dir.listFiles()) {
-                    System.out.print("- " + dirData.getAbsolutePath());
+                    System.out.print(Constants._S+dirData.getAbsolutePath()+" ");
                     HttpRequest httpRequest = null;
                     HttpResponse httpResponse = null;
                     for (File data : dirData.listFiles()) {
@@ -86,9 +85,9 @@ public class Cache {
                         }
                     }
                     if (httpRequest == null || httpResponse == null) {
-                        System.out.print(Constants.NOK);
+                        System.out.println(Constants.NOK);
                     } else {
-                        System.out.print(Constants.OK);
+                        System.out.println(Constants.OK);
                         putResponse(httpRequest, httpResponse);
                     }
                 }
@@ -100,17 +99,17 @@ public class Cache {
 
     public void saveToFile(HttpRequest httpRequest, HttpResponse httpResponse){
         try{
-            File dir = new File(DIRECTORY_DATA+"\\"+httpRequest.getHost()+"\\");
+            File dir = new File(DIRECTORY_DATA+"/"+httpRequest.getHost()+"/");
             if (dir.exists()) {
-                System.out.println("Directory "+dir.getAbsolutePath()+" already exist");
-                System.out.print(Constants._I+Constants.I_CACHE_DEL_DIR.replace("%1", dir.getAbsolutePath()));
+                System.out.println(Constants._I+Constants.CACHE_DIR_EXISTS.replace("%1", dir.getAbsolutePath()));
+                System.out.print(Constants._I+Constants.CACHE_DEL_DIR.replace("%1", dir.getAbsolutePath()));
                 if(dir.delete()){
                     System.out.println(Constants.OK);
                 }else {
                     System.out.println(Constants.NOK);
                 }
             }
-            System.out.print("Create directory " + dir.getAbsolutePath());
+            System.out.print(Constants._I+Constants.CACHE_CREATE_DIR.replace("%1", dir.getAbsolutePath()));
             if (dir.mkdir()) {
                 System.out.println(Constants.OK);
             } else {
@@ -121,17 +120,17 @@ public class Cache {
             JAXBContext jaxbContext;
             Marshaller jaxbMarshaller;
 
-            File requestFile = new File(dir.getAbsolutePath()+"\\"+FILE_REQUEST);
+            File requestFile = new File(dir.getAbsolutePath()+"/"+FILE_REQUEST);
             jaxbContext = JAXBContext.newInstance(HttpRequest.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.marshal(httpRequest, requestFile);
-            System.out.println(Constants._I+Constants.I_CACHE_SAVE_REQ.replace("%1", dir.getAbsolutePath()));
+            System.out.println(Constants._I+Constants.CACHE_SAVE_REQ.replace("%1", dir.getAbsolutePath()));
 
-            File responseFile = new File(dir.getAbsolutePath()+"\\"+FILE_RESPONSE);
+            File responseFile = new File(dir.getAbsolutePath()+"/"+FILE_RESPONSE);
             jaxbContext = JAXBContext.newInstance(HttpResponse.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.marshal(httpResponse, responseFile);
-            System.out.println(Constants._I+Constants.I_CACHE_SAVE_RES.replace("%1", dir.getAbsolutePath()));
+            System.out.println(Constants._I+Constants.CACHE_SAVE_RES.replace("%1", dir.getAbsolutePath()));
 
         }catch(Exception e){
             e.printStackTrace();

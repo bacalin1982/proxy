@@ -2,6 +2,7 @@ package proxy;
 
 import proxy.bean.HttpRequest;
 import proxy.bean.HttpResponse;
+import proxy.tools.Constants;
 import proxy.util.HttpRequestBuilder;
 import proxy.util.HttpResponseBuilder;
 
@@ -30,7 +31,7 @@ public class Request extends Thread  {
             //get response from server
             String host = httpRequest.getHost();
             Socket serverSocket = new Socket(host, 80);
-            System.out.println("Connect to " + host + " on port 80");
+            System.out.println(Constants._I+ Constants.WEB_SERVER_CON.replace("%1", host));
             int nbrWaiting = 10;
             S:
             while (!serverSocket.isClosed()) {
@@ -44,7 +45,6 @@ public class Request extends Thread  {
                     //tempo
                     while (serverRequestStream.available() == 0) {
                         sleep(1000);
-                        System.out.println("waiting for server 1s");
                         if (nbrWaiting == 0) {
                             serverSocket.close();
                             continue S;
@@ -79,7 +79,7 @@ public class Request extends Thread  {
                             //save data
                             Cache.getInstance().saveToFile(httpRequest, httpResponse);
                         }else{
-                            System.out.println("Response for "+httpRequest.getHost()+" not put in cache");
+                            System.out.println(Constants._I+Constants.RESPONSE_CANNOT_BE_CACHED.replace("%1", httpRequest.getHost()));
                         }
 
                         //close server socket
@@ -93,7 +93,7 @@ public class Request extends Thread  {
 
             //close client socket
             this.clientSocket.close();
-            System.out.println("Client " + this.clientSocket.getRemoteSocketAddress().toString() + " close...");
+            System.out.println(Constants._I+Constants.CLIENT_CLOSE.replace("%1", this.clientSocket.getRemoteSocketAddress().toString()));
 
         } catch (Exception e) {
             e.printStackTrace();

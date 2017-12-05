@@ -1,5 +1,7 @@
 package proxy.bean;
 
+import proxy.tools.Constants;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.ZonedDateTime;
@@ -87,65 +89,61 @@ public class HttpResponse {
 
     @Override
     public String toString() {
-        String response = "Response:\n"+
-                "\tProperties:";
+        String response = Constants._S+"Response:\n"+
+                "\t\t\tProperties:";
         for(String key: this.params.keySet()){
-            response += "\n\t\t- "+key+":"+this.params.get(key);
+            response += "\n\t\t\t\t- "+key+":"+this.params.get(key);
         }
-        response += "\n\tResponse:";
-        for(byte[] serverResponse: this.serverResponseList){
-            response += "\n\t\t"+serverResponse;
-        }
+        //response += "\n\t\t\tResponse:";
+        //for(byte[] serverResponse: this.serverResponseList){
+        //   response += "\n\t\t\t\t"+serverResponse;
+        //}
         return response;
     }
 
     public boolean isPutInCache(){
-        System.out.print("Check if put in cache: ");
+        System.out.print(Constants._I+Constants.RESPONSE_CAN_BE_CACHED);
         //Check property Cache-Control
         String cacheControl = getParam(CACHE_CONTROL);
-        System.out.print(CACHE_CONTROL+"="+cacheControl);
         if(cacheControl == null || cacheControl.indexOf("no-cache") == -1){
-            System.out.println(" => OK");
+            System.out.println(Constants.YES);
+            System.out.println(Constants._S+CACHE_CONTROL+"="+cacheControl);
             return true;
         }else{
-            System.out.println(" => NO CACHE");
+            System.out.println(Constants.NO);
         }
+        System.out.println(Constants._S+CACHE_CONTROL+"="+cacheControl);
         return false;
     }
 
     public boolean isValid(HttpRequest httpRequest){
-        System.out.print("Check if response valid: ");
+        System.out.print(Constants._I+Constants.RESPONSE_IS_VALID);
         //Check property Cache-Control
         String cacheControl = getParam(CACHE_CONTROL);
-        System.out.print(CACHE_CONTROL+"="+cacheControl+",");
 
         //max age
         int maxAge = -1;
-        if(cacheControl != null){
+        if(cacheControl != null) {
             String[] cacheControlSplit = cacheControl.split(",");
-            for(int i = 0; i<cacheControlSplit.length; i++){
+            for (int i = 0; i < cacheControlSplit.length; i++) {
                 String[] cacheControleVal = cacheControlSplit[i].split("=");
-                if(cacheControleVal.length == 2 && MAX_AGE.equals(cacheControleVal[0])){
+                if (cacheControleVal.length == 2 && MAX_AGE.equals(cacheControleVal[0])) {
                     maxAge = Integer.parseInt(cacheControleVal[1]);
                 }
             }
         }
-        System.out.print(MAX_AGE+"="+maxAge+",");
 
         //expire
         ZonedDateTime expiresDate = null;
         if(getParam(EXPIRES) != null) {
             expiresDate =  ZonedDateTime.parse(getParam(EXPIRES), DateTimeFormatter.RFC_1123_DATE_TIME);
         }
-        System.out.print(EXPIRES + "=" + expiresDate + ",");
 
         //request date
         ZonedDateTime requestDate = null;
         if(getParam(DATE) != null) {
             requestDate = ZonedDateTime.parse(getParam(DATE), DateTimeFormatter.RFC_1123_DATE_TIME);
         }
-        System.out.print(DATE+"="+requestDate);
-
 
         Date dToCompare = null;
         if(maxAge > -1) {
@@ -157,11 +155,18 @@ public class HttpResponse {
 
         Date now = new Date();
         if(dToCompare != null && now.after(dToCompare)) {
-            System.out.println(" => NO VALID");
+            System.out.println(Constants.NO);
+            System.out.println(Constants._S+MAX_AGE+"="+maxAge+",");
+            System.out.println(Constants._S+EXPIRES + "=" + expiresDate + ",");
+            System.out.println(Constants._S+DATE+"="+requestDate);
+            System.out.println(Constants._S+CACHE_CONTROL + "=" + cacheControl);
             return false;
         }
-
-        System.out.println(" => VALID");
+        System.out.println(Constants.YES);
+        System.out.println(Constants._S+MAX_AGE+"="+maxAge+",");
+        System.out.println(Constants._S+EXPIRES + "=" + expiresDate + ",");
+        System.out.println(Constants._S+DATE+"="+requestDate);
+        System.out.println(Constants._S+CACHE_CONTROL+"="+cacheControl);
         return true;
     }
 
