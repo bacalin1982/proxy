@@ -102,7 +102,7 @@ public class Cache {
         try{
             /*
             * For each request an MD5 print is calculated to have a response for each files in web page
-            * MessageDigest is integrated to java.secruity classes and do the job.
+            * MessageDigest is integrated to java.security classes and do the job.
             * Get MD5 print with a StringBuffer and its done.
             * */
             byte[] bytesRequest = httpRequest.toString().getBytes("UTF-8");
