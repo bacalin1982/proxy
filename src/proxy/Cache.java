@@ -1,7 +1,9 @@
 package proxy;
 
+import com.sun.tools.internal.jxc.ap.Const;
 import proxy.bean.HttpRequest;
 import proxy.bean.HttpResponse;
+import proxy.tools.Constants;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -28,44 +30,43 @@ public class Cache {
     }
 
     public Map<HttpRequest, HttpResponse> getResponseList() {
-        return responseList;
+        return this.responseList;
     }
 
     public HttpResponse getResponseFromRequest(HttpRequest request){
-        if(responseList.containsKey(request)){
-            return responseList.get(request);
+        if(this.responseList.containsKey(request)){
+            return this.responseList.get(request);
         }
         return null;
     }
 
     public void putResponse(HttpRequest httpRequest, HttpResponse httpResponse){
-        responseList.put(httpRequest, httpResponse);
+        this.responseList.put(httpRequest, httpResponse);
     }
 
     public void initialize(){
         try {
-            System.out.println("Initialize cache ...");
-
+            System.out.println(Constants._I+Constants.I_CACHE_START);
             //create directory
-            File dir = new File(DIRECTORY_DATA+"\\");
+            File dir = new File(this.DIRECTORY_DATA+"\\");
             if (!dir.exists()) {
-                System.out.print("- Create directory " + dir.getAbsolutePath());
+                System.out.print(Constants._S+Constants.I_CACHE_CREATE_DIR.replace("%1", dir.getAbsolutePath()));
                 if (dir.mkdir()) {
-                    System.out.println(" OK");
+                    System.out.println(Constants.OK);
                 } else {
-                    System.out.println(" ERROR");
+                    System.out.println(Constants.NOK);
                     System.exit(0);
                 }
             }else{
-                System.out.println("- Directory "+dir.getAbsolutePath()+" already exist");
+                System.out.println(Constants._S+Constants.I_CACHE_DIR_EXISTS.replace("%1", dir.getAbsolutePath()));
             }
 
             //Loading cache
             JAXBContext jaxbContext;
             Unmarshaller jaxbUnmarshaller;
-            System.out.println("Loading data cache...");
+            System.out.println(Constants._S+Constants.I_CACHE_LOAD_DATA);
             if(dir.listFiles().length == 0){
-                System.out.println("- No data found in cache");
+                System.out.println(Constants._S+Constants.I_CACHE_DATA_NFOUND);
             }else {
                 for (File dirData : dir.listFiles()) {
                     System.out.print("- " + dirData.getAbsolutePath());
@@ -85,9 +86,9 @@ public class Cache {
                         }
                     }
                     if (httpRequest == null || httpResponse == null) {
-                        System.out.print(" ERROR");
+                        System.out.print(Constants.NOK);
                     } else {
-                        System.out.print(" OK");
+                        System.out.print(Constants.OK);
                         putResponse(httpRequest, httpResponse);
                     }
                 }

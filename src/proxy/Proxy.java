@@ -29,11 +29,11 @@ public class Proxy {
 
             // Launching proxy cache server
             System.out.println("\n");
-            System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%", Integer.toString(port)));
+            System.out.println(Constants._I+Constants.I_SERVER_START_PORT.replace("%1", Integer.toString(port)));
             new Thread(new Server(port)).start();
         }
         else{
-            System.out.println(Constants._E+Constants.E_WRONG_ARG_NMB.replace("%", Integer.toString(arg.length)));
+            System.out.println(Constants._E+Constants.E_WRONG_ARG_NMB.replace("%1", Integer.toString(arg.length)));
         }
 
 
