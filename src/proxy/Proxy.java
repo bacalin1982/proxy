@@ -2,8 +2,6 @@ package proxy;
 
 import proxy.tools.Constants;
 
-import java.security.MessageDigest;
-
 public class Proxy {
 
     public static void main(String[] arg){
