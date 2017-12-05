@@ -10,6 +10,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.security.MessageDigest;
 
 public class Cache {
 
@@ -99,7 +100,20 @@ public class Cache {
 
     public void saveToFile(HttpRequest httpRequest, HttpResponse httpResponse){
         try{
-            File dir = new File(DIRECTORY_DATA+"/"+httpRequest.getHost()+"/");
+            /*
+            * For each request an MD5 print is calculated to have a response for each files in web page
+            * MessageDigest is integrated to java.secruity classes and do the job.
+            * Get MD5 print with a StringBuffer and its done.
+            * */
+            byte[] bytesRequest = httpRequest.toString().getBytes("UTF-8");
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            bytesRequest = md.digest(bytesRequest);
+
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < bytesRequest.length; i++)
+                sb.append(Integer.toString((bytesRequest[i] & 0xff) + 0x100, 16).substring(1));
+
+            File dir = new File(DIRECTORY_DATA+"/"+sb.toString()+"/");
             if (dir.exists()) {
                 System.out.println(Constants._I+Constants.CACHE_DIR_EXISTS.replace("%1", dir.getAbsolutePath()));
                 System.out.print(Constants._I+Constants.CACHE_DEL_DIR.replace("%1", dir.getAbsolutePath()));
