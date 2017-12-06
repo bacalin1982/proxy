@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 
 public class Cache {
 
-    private final static String DIRECTORY_DATA  = "cache";
+    private String DIRECTORY_DATA  = "cache";
     private final static String FILE_REQUEST    = "request.xml";
     private final static String FILE_RESPONSE   = "response.xml";
 
@@ -49,11 +49,12 @@ public class Cache {
     * to the web server, get and decode the response, saving files locally and forward the response
     * to the client. This feature is in reality a cache system with persistence.
     * */
-    public void initialize(){
+    public void initialize(String cacheDir){
         try {
-            System.out.println(Constants._I+Constants.CACHE_START);
+            this.DIRECTORY_DATA = cacheDir;
+            System.out.println(Constants._I+Constants.CACHE_START.replace("%1", this.DIRECTORY_DATA));
             //create directory
-            File dir = new File(this.DIRECTORY_DATA+"/");
+            File dir = new File(this.DIRECTORY_DATA);
             if (!dir.exists()) {
                 System.out.print(Constants._S+Constants.CACHE_CREATE_DIR.replace("%1", dir.getAbsolutePath()));
                 if (dir.mkdir()) {

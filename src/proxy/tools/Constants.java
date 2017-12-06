@@ -12,9 +12,7 @@ public final class Constants {
                                          " -------------------------------------- ";
     // General messages
     public static final String _I = "INFO   : ";
-    public static final String _E = "ERROR  : ";
     public static final String _S = "        -> ";
-    public static final String _W = "WARNING: ";
     public static final String OK = "[SUCCESS]";
     public static final String NOK = "[ERROR]";
     public static final String YES = "[YES]";
@@ -27,15 +25,14 @@ public final class Constants {
     public static final String SERVER_READY = "Proxy ready for connections ... ";
     // Distant web server messages
     public static final String WEB_SERVER_CON = "Connecting to %1 on port 80 ... ";
-    public static final String WEB_SERVER_WAIT = "waiting for server 1s ... ";
     // Cache messages
-    public static final String CACHE_START = "Initializing cache ... ";
-    public static final String CACHE_CREATE_DIR = "Creating cache %1 ... ";
+    public static final String CACHE_START = "Initializing cache [%1] ... ";
+    public static final String CACHE_CREATE_DIR = "Creating cache [%1] ... ";
     public static final String CACHE_ALR_EXISTS = "A cache is detected ...";
     public static final String CACHE_LOAD_DATA = "Loading data cache ... ";
     public static final String CACHE_DATA_NFOUND = "Cache is empty";
-    public static final String CACHE_SAVE_REQ = "Save request to directory %1";
-    public static final String CACHE_SAVE_RES = "Save response to directory %1";
+    public static final String CACHE_SAVE_REQ = "Save request to directory [%1]";
+    public static final String CACHE_SAVE_RES = "Save response to directory [%1]";
     public static final String CACHE_DEL_DIR = "Deleting %1 ... ";
     public static final String CACHE_DIR_EXISTS = "Directory %1 already exists ... ";
     // Client messages
@@ -50,6 +47,6 @@ public final class Constants {
 
     // Messages for errors (E_)
     // Proxy server messages
-    public static final String WRONG_ARG_NMB = "Proxy takes exactly 1 argument (%1 given). Use: Proxy <server_port>";
-    public static final String WRONG_ARG_FMT = "Wrong argument format. Default port 8081 will be used.";
+    public static final String WRONG_PORT_ARG = "Port is not valid, default port will be used instead [%1]";
+    public static final String WRONG_DIR_ARG = "Directory is not valid, default dir will be used instead [%1]";
 }
