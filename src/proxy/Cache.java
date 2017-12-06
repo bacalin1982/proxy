@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 
 public class Cache {
 
-    private final static String DIRECTORY_DATA  = "responses";
+    private final static String DIRECTORY_DATA  = "cache";
     private final static String FILE_REQUEST    = "request.xml";
     private final static String FILE_RESPONSE   = "response.xml";
 
@@ -43,7 +43,12 @@ public class Cache {
     public void putResponse(HttpRequest httpRequest, HttpResponse httpResponse){
         this.responseList.put(httpRequest, httpResponse);
     }
-
+    /*
+    * [REQ_07] Cache/persistence part
+    * If the requested web page is not available locally, the server shall forward the request
+    * to the web server, get and decode the response, saving files locally and forward the response
+    * to the client. This feature is in reality a cache system with persistence.
+    * */
     public void initialize(){
         try {
             System.out.println(Constants._I+Constants.CACHE_START);

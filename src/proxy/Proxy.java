@@ -35,7 +35,5 @@ public class Proxy {
         else{
             System.out.println(Constants._E+Constants.WRONG_ARG_NMB.replace("%1", Integer.toString(arg.length)));
         }
-
-
     }
 }

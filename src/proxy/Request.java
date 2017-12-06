@@ -23,7 +23,10 @@ public class Request extends Thread  {
         this.clientRequest = clientRequest;
         this.clientOutputStream = clientOutputStream;
     }
-
+    /*
+    * [REQ_09] Thread for pipelining.
+    * The server implements a request/response pipelining system to optimize the response for the client.
+    * */
     @Override
     public void run() {
         try {

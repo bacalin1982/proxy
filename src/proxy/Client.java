@@ -29,10 +29,19 @@ public class Client extends Thread {
 
             while (!this.clientSocket.isClosed()) {
 
+                /*
+                * [REQ_03]
+                * The proxy cache server shall support client HTTP versions such as 1.0 and 1.1, HTTPS is out of scope.
+                 */
+
                 //client request
                 this.clientRequestStream = new DataInputStream(this.clientSocket.getInputStream());
                 this.clientOutputStream = new DataOutputStream(this.clientSocket.getOutputStream());
 
+                /*
+                * [REQ_05]
+                * Get and decode a HTTP request from a client
+                * */
                 //read client request
                 this.clientRequest = "";
                 byte[] clientLine = new byte[ this.clientRequestStream.available()];
@@ -41,6 +50,15 @@ public class Client extends Thread {
                     this.clientRequest += new String(clientLine);
                 }
 
+                /*
+                * [REQ_04]
+                * Only the GET method and static websites shall be compatible.
+                *
+                * [REQ_07] Evaluating part and forwarding to the client part.
+                * If the requested web page is not available locally, the server shall forward the request
+                * to the web server, get and decode the response, saving files locally and forward the response
+                * to the client. This feature is in reality a cache system with persistence.
+                * */
                 //make request
                 if (!this.clientRequest.isEmpty()) {
                     HttpRequest httpRequest = HttpRequestBuilder.makeHttpRequest(this.clientRequest);
@@ -48,6 +66,11 @@ public class Client extends Thread {
                         System.out.println(httpRequest.toString());
                         HttpResponse httpResponse = Cache.getInstance().getResponseFromRequest(httpRequest);
                         if (httpResponse == null || !httpResponse.isValid(httpRequest)) {
+                            /*
+                            * [REQ_09]
+                            * The server implements a request/response pipelining system to optimize the response for the client.
+                            * Thread solution
+                            * */
                             //response does not exist in cache
                             System.out.println(Constants._I+Constants.CLIENT_RES_NO_CACHE.replace("%1", httpRequest.getHost()));
                             serverThread = new Request(this.clientSocket, this.clientRequest, this.clientOutputStream);
@@ -56,8 +79,11 @@ public class Client extends Thread {
                             while(!serverThread.isInterrupted()){
                                 continue;
                             }
-
                         } else {
+                            /*
+                            * [REQ_06]
+                            * If the requested web page is available locally, the server shall transmit it to the client.
+                            * */
                             //response exist in cache
                             System.out.println(Constants._I+Constants.RESPONSE_IS_ALR_CACHED.replace("%1", httpRequest.getHost()));
                             System.out.println(httpResponse.toString());
