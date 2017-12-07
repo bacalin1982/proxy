@@ -1,1 +1,7 @@
-Command: java -jar proxy.jar <port>
+Syntax: java -jar proxy.jar [options]
+
+Where options are:
+
+-p : Port used by the server. By default if this option is not given, the 8080 port will be used instead.
+
+-d : Directory of cache system, by default the folder is set to "cache"
